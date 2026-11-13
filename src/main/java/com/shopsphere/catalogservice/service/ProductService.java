@@ -26,8 +26,9 @@ public class ProductService {
     @Cacheable(value = RedisConfig.PRODUCT_CACHE ,key = "#id")
     public ProductResponse getProduct(Long id){
         log.info("Cache MISS - loading product {} from DB", id);
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(id));
+        Product product = productRepository.findByIdAndActiveTrue(id)
+            .orElseThrow(() -> new ProductNotFoundException(id));
+            
         return ProductResponse.from(product);
     }
 
